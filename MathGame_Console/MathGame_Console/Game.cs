@@ -137,6 +137,7 @@ namespace MathGame_Console
                 if (_num1 < 101)
                     break;
             }
+            _answer = _num1 / _num2;
             PlayerAnswer = -1;
         }
 
