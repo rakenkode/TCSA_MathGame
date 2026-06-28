@@ -34,6 +34,7 @@ namespace MathGame_Console
             Game[] games = new Game[gameSize];
             Random random = new Random();
             int type = 0;
+            
             for (int i = 0; i < gameSize; i++)
             {
                 if (mode < 4)

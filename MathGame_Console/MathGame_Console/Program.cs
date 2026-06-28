@@ -10,7 +10,6 @@ namespace MathGame_Console
         private static Game[] _games = Array.Empty<Game>();
         private static Stopwatch _stopWatch = new Stopwatch();
         
-        
         static void Main(string[] args)
         {
             ActivePage activePage = ActivePage.MainPage;
@@ -22,7 +21,6 @@ namespace MathGame_Console
                     case ActivePage.MainPage:
                         DisplayMain();
                         var userInput = Console.ReadLine()?.Trim().ToUpper();
-                        Console.WriteLine($"You entered:{userInput}");
                         if (userInput != null) activePage = NavigateFromMain(userInput);
                         break;
                     case ActivePage.GamePage:
@@ -45,8 +43,8 @@ namespace MathGame_Console
                         break;
                 }
             }
+            
             Console.WriteLine("Goodbye!");
-            Thread.Sleep(500);
         }
         
         private static void ExitApplication()
@@ -60,7 +58,7 @@ namespace MathGame_Console
             {
                 Console.Clear();
                 Console.WriteLine($"Closing in {i}...");
-                Thread.Sleep(500);
+                Thread.Sleep(400);
             }
         }
         
@@ -121,9 +119,9 @@ namespace MathGame_Console
             Console.Clear();
             Console.WriteLine($"===========   GAME {gameNumber + 1} of 5   ===========");
             Console.WriteLine(string.Empty);
-            Console.WriteLine($"      {_games[gameNumber].ToString()}");
+            Console.WriteLine($"      Problem:  {_games[gameNumber].ToString()}");
             Console.WriteLine(string.Empty);
-            Console.Write("      Answer: ");
+            Console.Write("      Answer [ x  to quit ]: ");
         }
 
         private static ActivePage NavigateFromGame(string userInput)
