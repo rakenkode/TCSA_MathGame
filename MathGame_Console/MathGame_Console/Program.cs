@@ -8,6 +8,7 @@ namespace MathGame_Console
         private static bool _isAppActive = true;
         private static int _questionNumber = 0;
         private static int _numberOfQuestions = 5;
+        private static int _selectedGameNumber = 1;
         private static Game game = new Game(GameType.Addition, 5);
         private static List<Game> games = new List<Game>();
         private static Stopwatch _stopWatch = new Stopwatch();
@@ -52,6 +53,11 @@ namespace MathGame_Console
                             var historyInput = Console.ReadLine()?.Trim().ToUpper();
                             if (historyInput != null) activePage = NavigateFromGameHistory(historyInput);
                         }
+                        break;
+                    case ActivePage.GameInfoPage:
+                        DisplayGameInfo();
+                        var gameDataInput = Console.ReadLine()?.Trim().ToUpper();
+                        if (gameDataInput != null) activePage = NavigateFromGameInfo(gameDataInput);
                         break;
                     default:
                         ExitApplication();
@@ -184,7 +190,7 @@ namespace MathGame_Console
             DisplayGameData(game);
             Console.WriteLine(string.Empty);
             Console.WriteLine(" Choose an option:");
-            Console.WriteLine("  [ n ] = New Game");
+            Console.WriteLine("  [ m ] = Main Menu");
             Console.WriteLine("  [ x ] = Exit Application");
             Console.WriteLine();
             Console.Write(" Input: ");
@@ -196,7 +202,7 @@ namespace MathGame_Console
             {
                 return ActivePage.ExitPage;
             }
-            else if (userInput.Equals("N", StringComparison.OrdinalIgnoreCase))
+            else if (userInput.Equals("M", StringComparison.OrdinalIgnoreCase))
             {
                 return ActivePage.MainPage;
             }
@@ -238,14 +244,15 @@ namespace MathGame_Console
             Console.WriteLine("===========   GAME HISTORY   ==========");
             Console.WriteLine(string.Empty);
 
-            Console.WriteLine("Game#    Type            Rating        Duration");
+            Console.WriteLine("Game#    Type            Rating      Duration");
             for (int i = 0; i < games.Count; i++)
             {
-                Console.WriteLine($"  {(i + 1).ToString(),-6} {games[i].GameType,-15} {games[i].Rating}{" %",-11} {games[i].Duration} sec");
+                Console.WriteLine($"  {(i + 1).ToString(),-6} {games[i].GameType,-15} {games[i].Rating + "%",-11} {games[i].Duration} sec");
             }
             
             Console.WriteLine(string.Empty);
             Console.WriteLine(" Choose an option:");
+            Console.WriteLine("  [ n ] = Where n is Game# to view");
             Console.WriteLine("  [ m ] = Main Menu");
             Console.WriteLine("  [ x ] = Exit Application");
             Console.WriteLine();
@@ -254,16 +261,56 @@ namespace MathGame_Console
 
         private static ActivePage NavigateFromGameHistory(string userInput)
         {
-            if (userInput.Equals("M", StringComparison.OrdinalIgnoreCase))
+            if (int.TryParse(userInput, out int number))
             {
-                return ActivePage.MainPage;
+                if (number > 0 && number <= games.Count)
+                {
+                    _selectedGameNumber = number;
+                    return ActivePage.GameInfoPage;
+                }
             }
-            else if (userInput.Equals("X", StringComparison.OrdinalIgnoreCase))
+            else
             {
-                return ActivePage.ExitPage;
+                if (userInput.Equals("M", StringComparison.OrdinalIgnoreCase))
+                {
+                    return ActivePage.MainPage;
+                }
+                else if (userInput.Equals("X", StringComparison.OrdinalIgnoreCase))
+                {
+                    return ActivePage.ExitPage;
+                }
             }
-
             return ActivePage.HistoryPage;
+        }
+
+        private static void DisplayGameInfo()
+        {
+            Console.Clear();
+            Console.WriteLine("===========   GAME   INFO   ===========");
+            Console.WriteLine(string.Empty);
+            DisplayGameData(games[_selectedGameNumber - 1]);
+            Console.WriteLine(string.Empty);
+            Console.WriteLine(" Choose an option:");
+            Console.WriteLine("  [ h ] = Game History");
+            Console.WriteLine("  [ m ] = Main Menu");
+            Console.WriteLine("  [ x ] = Exit Application");
+            Console.WriteLine();
+            Console.Write(" Input: ");
+        }
+
+        private static ActivePage NavigateFromGameInfo(string userInput)
+        {
+            switch (userInput)
+            {
+                case "H":
+                    return ActivePage.HistoryPage;
+                case "M":
+                    return ActivePage.MainPage;
+                case "X":
+                    return ActivePage.ExitPage;
+                default:
+                    return ActivePage.GameInfoPage;
+            }
         }
         
         private enum ActivePage
@@ -271,7 +318,8 @@ namespace MathGame_Console
             MainPage = 0,
             GamePage = 1,
             HistoryPage = 2,
-            ExitPage = 3
+            GameInfoPage = 3,
+            ExitPage = 4
         }
     }
     
