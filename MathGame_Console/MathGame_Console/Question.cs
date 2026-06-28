@@ -77,11 +77,11 @@ namespace MathGame_Console
             {
                 if (gameType == GameType.Random)
                 {
-                    type = 4;
+                    Thread.Sleep(random.Next(0, 101));
+                    type = random.Next(0, 4);
                 }
                 else
                 {
-                    Thread.Sleep(random.Next(0, 101));
                     type = (int) gameType;
                 }
                 
