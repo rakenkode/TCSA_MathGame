@@ -6,8 +6,8 @@ namespace MathGame_Console
     class Program
     {
         private static bool _isAppActive = true;
-        private static int _gameNumber = 0;
-        private static Game[] _games = Array.Empty<Game>();
+        private static int _questionNumber = 0;
+        private static Question[] _questions = Array.Empty<Question>();
         private static Stopwatch _stopWatch = new Stopwatch();
         
         static void Main(string[] args)
@@ -24,9 +24,9 @@ namespace MathGame_Console
                         if (userInput != null) activePage = NavigateFromMain(userInput);
                         break;
                     case ActivePage.GamePage:
-                        if (_gameNumber < 5)
+                        if (_questionNumber < 5)
                         {
-                            DisplayGame(_gameNumber);
+                            DisplayGame(_questionNumber);
                             var gameInput = Console.ReadLine()?.Trim().ToUpper();
                             if (gameInput != null) activePage = NavigateFromGame(gameInput);
                         }
@@ -85,41 +85,42 @@ namespace MathGame_Console
                 case "X":
                     return ActivePage.ExitPage;
                 case "1":
-                    _gameNumber = 0;
-                    _games = Game.CreateGames(0);
-                    _stopWatch.Restart();
+                    _questions = Question.CreateProblems(0);
+                    InitGame();
                     return ActivePage.GamePage;
                 case "2":
-                    _gameNumber = 0;
-                    _games = Game.CreateGames(1);
-                    _stopWatch.Restart();
+                    _questions = Question.CreateProblems(1);
+                    InitGame();
                     return ActivePage.GamePage;
                 case "3":
-                    _gameNumber = 0;
-                    _games = Game.CreateGames(2);
-                    _stopWatch.Restart();
+                    _questions = Question.CreateProblems(2);
+                    InitGame();
                     return ActivePage.GamePage;
                 case "4":
-                    _gameNumber = 0;
-                    _games = Game.CreateGames(3);
-                    _stopWatch.Restart();
+                    _questions = Question.CreateProblems(3);
+                    InitGame();
                     return ActivePage.GamePage;
                 case "5":
-                    _gameNumber = 0;
-                    _games = Game.CreateGames(4);
-                    _stopWatch.Restart();
+                    _questions = Question.CreateProblems(4);
+                    InitGame();
                     return ActivePage.GamePage;
                 default:
                     return ActivePage.MainPage;
             }
         }
 
+        private static void InitGame()
+        {
+            _questionNumber = 0;
+            _stopWatch.Restart();
+        }
+        
         private static void DisplayGame(int gameNumber)
         {
             Console.Clear();
             Console.WriteLine($"===========   GAME {gameNumber + 1} of 5   ===========");
             Console.WriteLine(string.Empty);
-            Console.WriteLine($"      Problem:  {_games[gameNumber].ToString()}");
+            Console.WriteLine($"      Problem:  {_questions[gameNumber].ToString()}");
             Console.WriteLine(string.Empty);
             Console.Write("      Answer [ x  to quit ]: ");
         }
@@ -128,10 +129,9 @@ namespace MathGame_Console
         {
             if (Int32.TryParse(userInput, out int number))
             {
-                _games[_gameNumber].PlayerAnswer = number;
-                
-                _gameNumber++;
-                if (_gameNumber == 5)
+                _questions[_questionNumber].PlayerAnswer = number;
+                _questionNumber++;
+                if (_questionNumber == 5)
                     _stopWatch.Stop();
             }
             else if (userInput.Equals("X", StringComparison.OrdinalIgnoreCase))
@@ -151,14 +151,14 @@ namespace MathGame_Console
             Console.WriteLine(string.Empty);
             Console.WriteLine($"   problem         answer      result");
             
-            for (int i = 0; i < _games.Length; i++)
+            for (int i = 0; i < _questions.Length; i++)
             {
-                if (_games[i].IsPlayerCorrect())
+                if (_questions[i].IsPlayerCorrect())
                     score++;
                 
-                Console.WriteLine($"   {_games[i].ToString(),-15}  {_games[i].PlayerAnswer.ToString(),-10}  {(_games[i].IsPlayerCorrect() ? "pass" : "fail")}");
+                Console.WriteLine($"   {_questions[i].ToString(),-15}  {_questions[i].PlayerAnswer.ToString(),-10}  {(_questions[i].IsPlayerCorrect() ? "pass" : "fail")}");
             }
-            rating = (score / (double) _games.Length) * 100;
+            rating = (score / (double) _questions.Length) * 100;
             
             Console.WriteLine(string.Empty);
             Console.WriteLine($"  Game time: {_stopWatch.ElapsedMilliseconds / 1000} sec     Rating: {rating:0}%");

@@ -1,6 +1,6 @@
 namespace MathGame_Console
 {
-    internal abstract class Game
+    internal abstract class Question
     {
         private protected int _num1 = 0;
         private protected int _num2 = 0;
@@ -28,14 +28,14 @@ namespace MathGame_Console
             return _answer == PlayerAnswer;
         }
         
-        public static Game[] CreateGames(int mode)
+        public static Question[] CreateProblems(int mode)
         {
-            int gameSize = 5;
-            Game[] games = new Game[gameSize];
+            int numQuestion = 5;
+            Question[] questions = new Question[numQuestion];
             Random random = new Random();
             int type = 0;
             
-            for (int i = 0; i < gameSize; i++)
+            for (int i = 0; i < numQuestion; i++)
             {
                 if (mode < 4)
                 {
@@ -50,27 +50,27 @@ namespace MathGame_Console
                 switch (type)
                 {
                     case 0:
-                        games[i] = new AdditionGame();
+                        questions[i] = new AdditionProblem();
                         break;
                     case 1:
-                        games[i] = new SubtractionGame();
+                        questions[i] = new SubtractionProblem();
                         break;
                     case 2:
-                        games[i] = new MultiplicationGame();
+                        questions[i] = new MultiplicationProblem();
                         break;
                     case 3:
-                        games[i] = new DivisionGame();
+                        questions[i] = new DivisionProblem();
                         break;
                 }
             }
             
-            return games;
+            return questions;
         }
     }
     
-    internal class AdditionGame : Game
+    internal class AdditionProblem : Question
     {
-        public AdditionGame()
+        public AdditionProblem()
         {
             _num1 = _random.Next(0, 101);
             do
@@ -88,9 +88,9 @@ namespace MathGame_Console
         }
     }
 
-    internal class SubtractionGame : Game
+    internal class SubtractionProblem : Question
     {
-        public SubtractionGame()
+        public SubtractionProblem()
         {
             int temp1 = _random.Next(0, 101);
             int temp2 = 0;
@@ -111,9 +111,9 @@ namespace MathGame_Console
         }
     }
 
-    internal class MultiplicationGame : Game
+    internal class MultiplicationProblem : Question
     {
-        public MultiplicationGame()
+        public MultiplicationProblem()
         {
             _num1 = _random.Next(0, 101);
             _num2 = _random.Next(0, 101);
@@ -127,9 +127,9 @@ namespace MathGame_Console
         }
     }
 
-    internal class DivisionGame : Game
+    internal class DivisionProblem : Question
     {
-        public DivisionGame()
+        public DivisionProblem()
         {
             while (true)
             {
