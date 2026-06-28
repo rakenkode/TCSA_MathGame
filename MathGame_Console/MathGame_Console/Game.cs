@@ -27,6 +27,44 @@ namespace MathGame_Console
         {
             return _answer == PlayerAnswer;
         }
+        
+        public static Game[] CreateGames(int mode)
+        {
+            int gameSize = 5;
+            Game[] games = new Game[gameSize];
+            Random random = new Random();
+            int type = 0;
+            for (int i = 0; i < gameSize; i++)
+            {
+                if (mode < 4)
+                {
+                    type = mode;
+                }
+                else
+                {
+                    Thread.Sleep(random.Next(0, 101));
+                    type = random.Next(0, 4);
+                }
+                
+                switch (type)
+                {
+                    case 0:
+                        games[i] = new AdditionGame();
+                        break;
+                    case 1:
+                        games[i] = new SubtractionGame();
+                        break;
+                    case 2:
+                        games[i] = new MultiplicationGame();
+                        break;
+                    case 3:
+                        games[i] = new DivisionGame();
+                        break;
+                }
+            }
+            
+            return games;
+        }
     }
     
     internal class AdditionGame : Game
