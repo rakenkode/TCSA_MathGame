@@ -1,6 +1,6 @@
 namespace MathGame_Console
 {
-    internal abstract class Question
+    public abstract class Question
     {
         private protected int _num1 = 0;
         private protected int _num2 = 0;
@@ -45,6 +45,44 @@ namespace MathGame_Console
                 {
                     Thread.Sleep(random.Next(0, 101));
                     type = random.Next(0, 4);
+                }
+                
+                switch (type)
+                {
+                    case 0:
+                        questions[i] = new AdditionProblem();
+                        break;
+                    case 1:
+                        questions[i] = new SubtractionProblem();
+                        break;
+                    case 2:
+                        questions[i] = new MultiplicationProblem();
+                        break;
+                    case 3:
+                        questions[i] = new DivisionProblem();
+                        break;
+                }
+            }
+            
+            return questions;
+        }
+
+        public static Question[] CreateProblems(GameType gameType, int numQuestion)
+        {
+            Question[] questions = new Question[numQuestion];
+            Random random = new Random();
+            int type = 0;
+            
+            for (int i = 0; i < numQuestion; i++)
+            {
+                if (gameType == GameType.Random)
+                {
+                    type = 4;
+                }
+                else
+                {
+                    Thread.Sleep(random.Next(0, 101));
+                    type = (int) gameType;
                 }
                 
                 switch (type)

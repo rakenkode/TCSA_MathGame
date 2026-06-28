@@ -7,7 +7,8 @@ namespace MathGame_Console
     {
         private static bool _isAppActive = true;
         private static int _questionNumber = 0;
-        private static Question[] _questions = Array.Empty<Question>();
+        private static int _numberOfQuestions = 5;
+        private static Game _game = new Game(GameType.Addition, 5);
         private static Stopwatch _stopWatch = new Stopwatch();
         
         static void Main(string[] args)
@@ -85,31 +86,31 @@ namespace MathGame_Console
                 case "X":
                     return ActivePage.ExitPage;
                 case "1":
-                    _questions = Question.CreateProblems(0);
-                    InitGame();
+                    _game = new Game(GameType.Addition, _numberOfQuestions);
+                    InitGameParams();
                     return ActivePage.GamePage;
                 case "2":
-                    _questions = Question.CreateProblems(1);
-                    InitGame();
+                    _game = new Game(GameType.Subtraction, _numberOfQuestions);
+                    InitGameParams();
                     return ActivePage.GamePage;
                 case "3":
-                    _questions = Question.CreateProblems(2);
-                    InitGame();
+                    _game = new Game(GameType.Multiplication, _numberOfQuestions);
+                    InitGameParams();
                     return ActivePage.GamePage;
                 case "4":
-                    _questions = Question.CreateProblems(3);
-                    InitGame();
+                    _game = new Game(GameType.Division, _numberOfQuestions);
+                    InitGameParams();
                     return ActivePage.GamePage;
                 case "5":
-                    _questions = Question.CreateProblems(4);
-                    InitGame();
+                    _game = new Game(GameType.Random, _numberOfQuestions);
+                    InitGameParams();
                     return ActivePage.GamePage;
                 default:
                     return ActivePage.MainPage;
             }
         }
 
-        private static void InitGame()
+        private static void InitGameParams()
         {
             _questionNumber = 0;
             _stopWatch.Restart();
@@ -120,7 +121,7 @@ namespace MathGame_Console
             Console.Clear();
             Console.WriteLine($"===========   GAME {gameNumber + 1} of 5   ===========");
             Console.WriteLine(string.Empty);
-            Console.WriteLine($"      Problem:  {_questions[gameNumber].ToString()}");
+            Console.WriteLine($"      Problem:  {_game.Questions[gameNumber].ToString()}");
             Console.WriteLine(string.Empty);
             Console.Write("      Answer [ x  to quit ]: ");
         }
@@ -129,7 +130,7 @@ namespace MathGame_Console
         {
             if (Int32.TryParse(userInput, out int number))
             {
-                _questions[_questionNumber].PlayerAnswer = number;
+                _game.Questions[_questionNumber].PlayerAnswer = number;
                 _questionNumber++;
                 if (_questionNumber == 5)
                     _stopWatch.Stop();
@@ -151,14 +152,14 @@ namespace MathGame_Console
             Console.WriteLine(string.Empty);
             Console.WriteLine($"   problem         answer      result");
             
-            for (int i = 0; i < _questions.Length; i++)
+            for (int i = 0; i < _game.Questions.Length; i++)
             {
-                if (_questions[i].IsPlayerCorrect())
+                if (_game.Questions[i].IsPlayerCorrect())
                     score++;
                 
-                Console.WriteLine($"   {_questions[i].ToString(),-15}  {_questions[i].PlayerAnswer.ToString(),-10}  {(_questions[i].IsPlayerCorrect() ? "pass" : "fail")}");
+                Console.WriteLine($"   {_game.Questions[i].ToString(),-15}  {_game.Questions[i].PlayerAnswer.ToString(),-10}  {(_game.Questions[i].IsPlayerCorrect() ? "pass" : "fail")}");
             }
-            rating = (score / (double) _questions.Length) * 100;
+            rating = (score / (double) _game.Questions.Length) * 100;
             
             Console.WriteLine(string.Empty);
             Console.WriteLine($"  Game time: {_stopWatch.ElapsedMilliseconds / 1000} sec     Rating: {rating:0}%");
